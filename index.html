@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Metaverso — Guía Didáctica</title>
+  <meta name="description" content="Metaverso: guía didáctica para bachillerato con tecnología, aplicaciones, economía, riesgos y actividades prácticas. Diseño neón animado y completamente responsivo.">
+  <style>
+    :root{
+      --bg-1: #030416;
+      --bg-2: #0b1130;
+      --card: rgba(255,255,255,0.03);
+      --glass: rgba(255,255,255,0.02);
+      --muted: #b8b7d6;
+      --text: #ecf6ff;
+      --neon-blu: #3ee0ff;
+      --neon-vio: #8b5cff;
+      --neon-pink: #ff63b8;
+      --maxw:1200px;
+      --radius:14px;
+    }
+    /* Reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));color:var(--text);-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    img{display:block;max-width:100%;height:auto}
+
+    /* Layout */
+    .wrap{max-width:var(--maxw);margin:26px auto;padding:20px}
+    header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .brand{display:flex;gap:12px;align-items:center}
+    .badge{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--neon-vio),var(--neon-blu));display:flex;align-items:center;justify-content:center;font-weight:900;color:#071426;box-shadow:0 12px 40px rgba(59,120,255,0.08)}
+    .title{font-weight:800;letter-spacing:0.2px}
+    .subtitle{color:var(--muted);font-size:13px}
+    nav ul{display:flex;gap:10px;list-style:none;align-items:center;flex-wrap:wrap}
+    nav a{padding:8px 12px;border-radius:10px;font-weight:700;color:var(--text);background:transparent;border:1px solid transparent}
+    nav a:hover{background:var(--glass);border-color:rgba(255,255,255,0.02)}
+    
+    /* Animated neon background (floating blobs + gradient) */
+    .neon-layer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+    .blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:0.18;transform:translate3d(0,0,0)}
+    .b1{width:720px;height:720px;left:-12%;top:-8%;background:radial-gradient(circle at 30% 30%, var(--neon-vio), transparent 40%);}
+    .b2{width:640px;height:640px;right:-10%;bottom:-6%;background:radial-gradient(circle at 70% 70%, var(--neon-blu), transparent 35%);}
+    .b3{width:420px;height:420px;left:60%;top:8%;background:radial-gradient(circle at 30% 30%, var(--neon-pink), transparent 40%);}
+    @keyframes floatA {0%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-24px) rotate(6deg)}100%{transform:translateY(0) rotate(0deg)}}
+    @keyframes floatB {0%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(18px) rotate(-4deg)}100%{transform:translateY(0) rotate(0deg)}}
+    .b1{animation:floatA 18s ease-in-out infinite}
+    .b2{animation:floatB 22s ease-in-out infinite}
+    .b3{animation:floatA 26s ease-in-out infinite}
+
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:20px;margin-top:18px;position:relative;z-index:1;align-items:start}
+    .panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:22px;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.03);box-shadow:0 18px 60px rgba(4,6,14,0.6)}
+    .hero h1{font-size:clamp(1.6rem,2.8vw,2.8rem);color:var(--neon-vio);text-shadow:0 8px 36px rgba(139,92,255,0.08)}
+    .muted{color:var(--muted);line-height:1.6}
+    .hero .actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
+
+    /* Media box */
+    .media{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);background:#020517}
+    .media picture, .media img{display:block;width:100%;height:100%}
+    /* responsive height constraints so images never look huge on desktop */
+    .media img{object-fit:cover;max-height:520px;width:100%;height:auto}
+    @media(min-width:1400px){.media img{max-height:420px}}
+    @media(max-width:980px){.hero{grid-template-columns:1fr}.media img{max-height:360px}}
+
+    /* Sections */
+    main{margin-top:20px;display:grid;gap:18px;position:relative;z-index:1}
+    .card{background:var(--card);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);box-shadow:0 12px 40px rgba(4,8,16,0.6)}
+    .card h2{color:var(--neon-blu);margin-bottom:8px}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media(max-width:780px){.grid-2{grid-template-columns:1fr}}
+    .list{padding-left:18px;color:var(--muted);margin-top:8px}
+    .note{font-size:0.95rem;color:var(--muted);margin-top:8px}
+
+    /* subtle animated borders and glows */
+    .glow-border{position:relative}
+    .glow-border:after{
+      content:"";position:absolute;inset:-1px;background:linear-gradient(90deg,var(--neon-vio),var(--neon-blu));border-radius:16px;filter:blur(18px);opacity:0.06;pointer-events:none;
+      transition:opacity .35s;
+    }
+    .glow-border:hover:after{opacity:0.12}
+
+    /* Buttons */
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;font-weight:800;color:#041026;background:linear-gradient(90deg,var(--neon-vio),var(--neon-blu));box-shadow:0 12px 40px rgba(59,120,255,0.12)}
+    .btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+
+    /* responsive typography */
+    p,li{font-size:0.98rem}
+    h3{color:var(--neon-pink)}
+    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:14px;padding:12px}
+
+    /* simple fade in for elements (when in view) */
+    .fade{opacity:0;transform:translateY(10px);transition:opacity .6s ease, transform .6s ease}
+    .fade.show{opacity:1;transform:translateY(0)}
+
+    /* accessibility helpers */
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  </style>
+</head>
+<body>
+  <!-- Animated neon background -->
+  <div class="neon-layer" aria-hidden="true">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+
+  <div class="wrap" role="document">
+    <header role="banner">
+      <div class="brand">
+        <div class="badge" aria-hidden="true">MV</div>
+        <div>
+          <div class="title">EXPLORANDO EL METAVERSO</div>
+          <div class="subtitle">Guía didáctica — Creado por: Obed Baltazar Sánchez Morales</div>
+        </div>
+      </div>
+
+      <nav aria-label="Principal">
+        <ul>
+          <li><a href="metaverso_obed.html">Metaverso</a></li>
+          <li><a href="cuantica_obed.html">Informática Cuántica</a></li>
+          <li><a href="robotica_obed.html">IoT y Robótica</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="panel glow-border" role="region" aria-labelledby="hero-title">
+        <h1 id="hero-title">¿Qué es el Metaverso?</h1>
+        <p class="muted" style="margin-top:10px">
+          El metaverso es una red de espacios virtuales interconectados donde las personas entran, interactúan y crean valor a través de avatares, mundos 3D y servicios digitales. Es una convergencia de tecnologías (VR, AR, IA, blockchain y redes) que habilitan experiencias persistentes e interactivas.
+        </p>
+
+        <div class="hero-actions" style="margin-top:12px">
+          <a class="btn" href="#tecnologias">Tecnologías</a>
+          <a class="btn btn-outline" href="#aplicaciones">Aplicaciones</a>
+        </div>
+      </div>
+
+      <aside class="media glow-border" aria-hidden="false">
+        <picture>
+          <source srcset="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2000&q=80" type="image/jpeg">
+          <img loading="lazy" src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80" alt="Persona con casco de realidad virtual" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=1200&q=80'">
+        </picture>
+      </aside>
+    </section>
+
+    <!-- Main content with more detailed sections -->
+    <main>
+      <!-- Section 1: Expanded definition & examples -->
+      <section id="concepto" class="card fade">
+        <h2>Definición ampliada y ejemplos concretos</h2>
+        <p class="muted" style="margin-top:8px">
+          El metaverso no es una sola plataforma: es un ecosistema compuesto por muchos entornos interconectados (o no) —cada uno con sus propias reglas— donde se combinan: identidad digital, mundos 3D, economías virtuales y herramientas colaborativas. 
+        </p>
+
+        <div class="grid-2" style="margin-top:12px">
+          <div>
+            <p class="muted"><strong>Ejemplo 1 — Educación:</strong> un laboratorio virtual donde estudiantes realizan experimentos de química en 3D, comparten resultados y repiten prácticas sin coste de materiales.</p>
+            <p class="muted" style="margin-top:8px"><strong>Ejemplo 2 — Entretenimiento:</strong> conciertos masivos en donde asistentes de distintas partes del mundo interactúan, compran objetos virtuales y cambian su experiencia con efectos en tiempo real.</p>
+          </div>
+          <div>
+            <p class="muted"><strong>Ejemplo 3 — Comercio:</strong> tiendas virtuales que permiten probar ropa en un avatar con medidas reales y comprar versiones digitales o físicas.</p>
+            <p class="muted" style="margin-top:8px"><strong>Ejemplo 4 — Trabajo:</strong> oficinas 3D para diseño colaborativo, con pizarras, modelos 3D y reuniones donde se simulan prototipos.</p>
+          </div>
+        </div>
+
+        <p class="note">Actividad: piensa un uso para tu materia (Historia, Biología o Física) que mejore el aprendizaje. Describe recursos necesarios, objetivos y evaluación (200–300 palabras).</p>
+      </section>
+
+      <!-- Section 2: Technologies detailed -->
+      <section id="tecnologias" class="card fade">
+        <h2>Tecnologías que sustentan el Metaverso</h2>
+
+        <div class="media">
+          <picture>
+            <source srcset="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=2000&q=80" type="image/jpeg">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=1200&q=80" alt="Dispositivos VR" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1512268140016-2f443c5f6b87?auto=format&fit=crop&w=1200&q=80'">
+          </picture>
+        </div>
+
+        <p class="muted" style="margin-top:10px">
+          El metaverso se apoya en varias capas tecnológicas. Aquí las más relevantes y cómo influyen:
+        </p>
+
+        <ul class="list" style="margin-top:8px">
+          <li><strong>Motores 3D:</strong> Unity, Unreal Engine permiten modelar mundos, físicas, animaciones y optimizar el render en tiempo real.</li>
+          <li><strong>Hardware:</strong> cascos VR, gafas AR, cámaras de profundidad y controladores hápticos para interacción natural.</li>
+          <li><strong>Redes y latencia:</strong> 5G, edge computing y WebRTC reducen retardos y permiten sincronización entre usuarios.</li>
+          <li><strong>IA:</strong> asistencia, generación de contenido procedimental y NPCs que enriquecen las interacciones.</li>
+          <li><strong>Blockchain y estándares de identidad:</strong> verificación de propiedad (NFTs), identidad descentralizada y mercados digitales.</li>
+        </ul>
+
+        <p class="note">Mini-propuesta técnica: si tu proyecto usa VR y multiusuario, documenta requisitos de red (ancho de banda, latencia) y elección de motor 3D.</p>
+      </section>
+
+      <!-- Section 3: Applications with subexamples -->
+      <section id="aplicaciones" class="card fade">
+        <h2>Aplicaciones reales y casos de estudio</h2>
+        <p class="muted" style="margin-top:8px">
+          El metaverso ya está en pruebas en educación, industria, medicina y entretenimiento. A continuación, casos concretos para entender su impacto.
+        </p>
+
+        <div class="grid-2" style="margin-top:12px">
+          <div>
+            <h3>Educación y formación</h3>
+            <p class="muted">Universidades crean laboratorios virtuales, simulaciones y recorridos históricos que permiten aprender de forma práctica y memorable.</p>
+            <ul class="list">
+              <li>Simulaciones médicas para práctica segura.</li>
+              <li>Laboratorios de química sin riesgo de sustancias peligrosas.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Industria y diseño</h3>
+            <p class="muted">Ingenieros y diseñadores usan espacios 3D colaborativos para revisar prototipos y simular procesos antes de producirlos físicamente.</p>
+            <ul class="list">
+              <li>Proyectos de arquitectura con visitas virtuales a escala real.</li>
+              <li>Fábricas digitales para optimizar procesos.</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="note">Actividad: elige un caso de estudio real y resume el objetivo, la tecnología usada y el resultado en 300 palabras.</p>
+      </section>
+
+      <!-- Section 4: Education impact -->
+      <section id="educacion" class="card fade">
+        <h2>Impacto en la educación (detalle para bachillerato)</h2>
+        <p class="muted" style="margin-top:8px">
+          El metaverso puede transformar cómo se enseña y evalúa: aprendizaje activo, simulaciones y proyectos colaborativos internacionales.
+        </p>
+
+        <ul class="list" style="margin-top:8px">
+          <li><strong>Aprendizaje práctico:</strong> prácticas repetibles sin costo material.</li>
+          <li><strong>Colaboración global:</strong> estudiantes de diferentes países trabajan juntos en un mismo espacio virtual.</li>
+          <li><strong>Evaluación por proyectos:</strong> presentaciones inmersivas que muestran competencias técnicas y blandas.</li>
+        </ul>
+
+        <p class="note">Actividad propuesta: diseñen una lección de 30 minutos en el metaverso (objetivos, actividades y criterios de evaluación).</p>
+      </section>
+
+      <!-- Section 5: Economy -->
+      <section id="economia" class="card fade">
+        <h2>Economía virtual, NFTs y propiedad digital</h2>
+        <p class="muted" style="margin-top:8px">
+          En el metaverso surgen mercados propios: terrenos, objetos y servicios digitales con valor real. Blockchain facilita la verificación de propiedad y las transacciones.
+        </p>
+
+        <ul class="list">
+          <li><strong>NFTs:</strong> certifican unicidad; ejemplos: arte digital, ropa para avatares, terrenos virtuales.</li>
+          <li><strong>Modelos de monetización:</strong> venta de objetos, entradas a eventos, suscripciones y microtransacciones.</li>
+        </ul>
+
+        <p class="note">Debate en clase: ¿debería regularse la compra-venta de bienes virtuales para proteger a los menores? Argumenta ambas posiciones.</p>
+      </section>
+
+      <!-- Section 6: Risks and future -->
+      <section id="riesgos" class="card fade">
+        <h2>Riesgos, ética y el futuro</h2>
+        <p class="muted" style="margin-top:8px">
+          El metaverso aporta oportunidades, pero también plantea desafíos: privacidad, seguridad, inclusión y regulación.
+        </p>
+
+        <ul class="list">
+          <li><strong>Privacidad:</strong> uso de datos biométricos y seguimiento de comportamiento.</li>
+          <li><strong>Seguridad:</strong> fraudes, robo de identidad y problemas en economías digitales.</li>
+          <li><strong>Inclusión digital:</strong> riesgo de exclusión por costes de hardware y conexión.</li>
+          <li><strong>Regulación:</strong> necesidad de normas sobre propiedad, impuestos y responsabilidad.</li>
+        </ul>
+
+        <p class="note">Reflexión: escribe 200 palabras proponiendo una norma que proteja a estudiantes en entornos virtuales.</p>
+      </section>
+
+      <!-- Activities & resources -->
+      <section class="card fade">
+        <h2>Actividades prácticas y recursos</h2>
+        <div class="grid-2" style="margin-top:8px">
+          <div>
+            <p class="muted"><strong>Proyecto sugerido (grupo):</strong> crea un recorrido educativo de 3 escenas (historia, ciencia, arte) en un editor 3D web o presentación interactiva. Documenta tecnologías, roles y evaluación.</p>
+            <p class="muted" style="margin-top:8px"><strong>Mini-actividad (individual):</strong> redacta una propuesta de 250 palabras para integrar una lección del currículo en el metaverso.</p>
+          </div>
+          <div>
+            <p class="muted"><strong>Recursos:</strong></p>
+            <ul class="list">
+              <li>Unity Learn — tutoriales básicos</li>
+              <li>Mozilla Hubs — crear salas 3D sin instalar</li>
+              <li>IBM / Microsoft docs sobre VR & AR</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Navigation buttons -->
+      <section class="card center" style="text-align:center">
+        <h3 style="color:var(--neon-pink)">Explorar más guías</h3>
+        <p class="muted" style="margin-top:6px">Continúa con las guías interconectadas:</p>
+        <div style="margin-top:12px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a class="btn" href="cuantica_obed.html">Informática Cuántica</a>
+          <a class="btn" href="robotica_obed.html">IoT y Robótica</a>
+        </div>
+      </section>
+
+      <!-- Credit -->
+      <section class="card fade">
+        <strong>Creado por: Obed Baltazar Sánchez Morales_Sección 1-4</strong>
+        <div class="muted" style="margin-top:8px;font-size:13px">Contenido adaptado para bachillerato — explicaciones, actividades y recursos recomendados.</div>
+      </section>
+    </main>
+
+    <footer role="contentinfo">
+      <div style="color:var(--muted)">Sección 1-4 — Explorando el Metaverso — Obed Baltazar Sánchez Morales</div>
+    </footer>
+  </div>
+
+  <!-- Small JS: reveal on scroll + ensure images adapt and have fallback -->
+  <script>
+    // Fade-in when in viewport
+    (function(){
+      const observer = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting) e.target.classList.add('show');
+        });
+      }, {threshold: 0.12});
+      document.querySelectorAll('.fade').forEach(el=>observer.observe(el));
+
+      // Images: add 'load' handler to ensure layout stable
+      document.querySelectorAll('img').forEach(img=>{
+        // if image fails, try to swap to a different fallback (keeps site visible)
+        img.addEventListener('error', function(){ if(this.dataset.fallback){ this.src = this.dataset.fallback }});
+        // set a conservative max-height for very large screens (already CSS handles it)
+      });
+    })();
+  </script>
+</body>
+</html>

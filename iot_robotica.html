@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>IoT y Robótica — Obed Baltazar Sánchez Morales</title>
+  <meta name="description" content="Guía didáctica IoT y Robótica: conceptos, arquitectura, sensores, proyectos y recursos. Fondo animado de partículas azul-metal para un diseño moderno y responsive."/>
+  <style>
+    :root{
+      --bg-1:#041024;
+      --bg-2:#071831;
+      --card: rgba(255,255,255,0.03);
+      --muted:#9fbfd6;
+      --text:#eaf7ff;
+      --accent:#3aa0ff;    /* azul metálico */
+      --accent-2:#6fc3ff;
+      --glow: rgba(58,160,255,0.10);
+      --radius:12px;
+      --maxw:1180px;
+    }
+
+    /* Reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));color:var(--text);-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    img{display:block;max-width:100%;height:auto}
+
+    /* Layout */
+    #particles-canvas{position:fixed;inset:0;z-index:0;display:block;background:transparent}
+    .wrap{max-width:var(--maxw);margin:22px auto;padding:20px;position:relative;z-index:2}
+    header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:60px;height:60px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:900;color:#012;box-shadow:0 12px 36px var(--glow);font-size:18px}
+    .title{font-weight:800}
+    .subtitle{color:var(--muted);font-size:13px}
+    nav ul{display:flex;gap:12px;list-style:none;flex-wrap:wrap}
+    nav a{padding:8px 12px;border-radius:10px;font-weight:700;background:transparent;border:1px solid transparent;color:var(--muted)}
+    nav a:hover{background:rgba(255,255,255,0.02);color:var(--text)}
+
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1fr 380px;gap:18px;margin-top:16px;align-items:start}
+    .panel{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));padding:20px;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.03);box-shadow:0 14px 44px rgba(2,8,16,0.6)}
+    .hero h1{font-size:clamp(1.6rem,2.6vw,2.6rem);color:var(--accent);margin:0;text-shadow:0 8px 28px rgba(58,160,255,0.06)}
+    .muted{color:var(--muted);line-height:1.6}
+
+    /* media */
+    .media{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);background:#031723}
+    .media img{object-fit:cover;width:100%;height:auto;max-height:520px}
+    @media(min-width:1400px){.media img{max-height:420px}}
+    @media(max-width:980px){.hero{grid-template-columns:1fr}.media img{max-height:360px}}
+
+    /* content */
+    main{margin-top:18px;display:grid;gap:16px}
+    .card{background:rgba(6,20,26,0.6);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);box-shadow:0 10px 30px rgba(2,8,12,0.6)}
+    .card h2{color:var(--accent-2);margin-bottom:8px}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media(max-width:780px){.grid-2{grid-template-columns:1fr}}
+    .list{padding-left:18px;color:var(--muted);margin-top:8px}
+    .note{font-size:0.95rem;color:var(--muted);margin-top:8px}
+    .cta{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;font-weight:800;color:#021925;background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:0 12px 36px rgba(58,160,255,0.08)}
+    .ghost{background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted)}
+
+    /* reveal animations */
+    .fade{opacity:0;transform:translateY(10px);transition:opacity .7s ease, transform .7s ease}
+    .fade.show{opacity:1;transform:translateY(0)}
+
+    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:14px;padding:12px}
+
+    /* helpers */
+    .center{text-align:center}
+    .small{font-size:0.95rem;color:var(--muted)}
+    .sr-only{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+  </style>
+</head>
+<body>
+  <!-- Particle canvas (blue metallic theme) -->
+  <canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+  <div class="wrap" role="document">
+    <header role="banner">
+      <div class="brand">
+        <div class="logo">IR</div>
+        <div>
+          <div class="title">IoT y Robótica</div>
+          <div class="subtitle">Guía didáctica — Creado por: Obed Baltazar Sánchez Morales</div>
+        </div>
+      </div>
+
+      <nav aria-label="Principal">
+        <ul>
+          <li><a href="metaverso_obed.html">Metaverso</a></li>
+          <li><a href="cuantica_obed.html">Informática Cuántica</a></li>
+          <li><a href="robotica_obed.html">IoT y Robótica</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="panel fade" id="intro-panel">
+        <h1 id="hero-title">IoT aplicada a la Robótica</h1>
+        <p class="muted" style="margin-top:8px">
+          El Internet de las Cosas (IoT) conecta sensores, actuadores y dispositivos a la red; al integrarlo con robótica obtenemos sistemas inteligentes capaces de percibir, comunicar y actuar de forma autónoma o colaborativa.
+        </p>
+        <div class="cta" style="margin-top:12px">
+          <a class="btn" href="#conceptos">Ver conceptos</a>
+          <a class="btn ghost" href="#proyectos">Ver proyectos</a>
+        </div>
+      </div>
+
+      <aside class="media fade" id="hero-media" aria-hidden="false">
+        <picture>
+          <source srcset="https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?auto=format&fit=crop&w=2000&q=80" type="image/jpeg">
+          <img loading="lazy" src="https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?auto=format&fit=crop&w=1200&q=80" alt="Robot con sensores industriales" data-fallback="https://images.unsplash.com/photo-1581091012184-7b7d316b2d5c?auto=format&fit=crop&w=1200&q=80" onerror="this.src=this.dataset.fallback">
+        </picture>
+      </aside>
+    </section>
+
+    <main>
+      <!-- Conceptos ampliados -->
+      <section id="conceptos" class="card fade">
+        <h2>Conceptos básicos y cómo se integran</h2>
+        <div class="grid-2" style="margin-top:8px">
+          <div>
+            <p class="muted"><strong>IoT:</strong> red de dispositivos con sensores y comunicaciones. Los datos se envían a la nube o a un servidor local para procesarse y desencadenar acciones.</p>
+            <p class="muted" style="margin-top:8px"><strong>Robótica:</strong> diseño de máquinas que interactúan con el mundo mediante sensores (percepción), control (decisión) y actuadores (acción).</p>
+          </div>
+          <div>
+            <p class="muted"><strong>Convergencia:</strong> robots que envían telemetría, reciben órdenes en tiempo real y aprenden de datos para mejorar su comportamiento (por ejemplo, mantenimiento predictivo).</p>
+            <p class="note" style="margin-top:8px">Actividad: dibuja un esquema donde un sensor envía datos por Wi-Fi a un servidor que ordena a un robot mover un actuador.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sensores y hardware -->
+      <section id="hardware" class="card fade">
+        <h2>Sensores, actuadores y plataformas</h2>
+        <div class="grid-2" style="margin-top:8px">
+          <div>
+            <p class="muted"><strong>Sensores comunes:</strong> ultrasonido (distancia), LIDAR (mapas 3D), IMU (posición/rotación), cámaras y sensores ambientales (temp/ humedad).</p>
+            <p class="muted" style="margin-top:8px"><strong>Actuadores:</strong> servos, motores DC, motores paso a paso, relés y actuadores neumáticos.</p>
+          </div>
+          <div>
+            <p class="muted"><strong>Plataformas:</strong> Arduino (proyectos simples), ESP32 (IoT con Wi-Fi/Bluetooth), Raspberry Pi (procesamiento más potente).</p>
+            <p class="note" style="margin-top:8px">Mini-proyecto: conecta un sensor DHT11 a un ESP32 y muestra temperatura/humedad en una web simple.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Arquitectura -->
+      <section id="arquitectura" class="card fade">
+        <h2>Arquitectura típica de un sistema IoT-robótica</h2>
+        <div class="media" style="margin-top:8px">
+          <picture>
+            <source srcset="https://images.unsplash.com/photo-1596495577886-d920f1fb7238?auto=format&fit=crop&w=2000&q=80" type="image/jpeg">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1596495577886-d920f1fb7238?auto=format&fit=crop&w=1200&q=80" alt="Diagrama de arquitectura IoT" data-fallback="https://images.unsplash.com/photo-1581091215367-59a09a1af77b?auto=format&fit=crop&w=1200&q=80" onerror="this.src=this.dataset.fallback">
+          </picture>
+        </div>
+
+        <ul class="list" style="margin-top:10px">
+          <li><strong>Percepción:</strong> sensores y adquisición de datos.</li>
+          <li><strong>Conectividad:</strong> Wi-Fi, Bluetooth, LoRa, 5G según alcance y consumo.</li>
+          <li><strong>Procesamiento:</strong> edge (local) o cloud — balancear latencia y privacidad.</li>
+          <li><strong>Aplicación:</strong> dashboards, alertas y control remoto.</li>
+        </ul>
+        <p class="note">Debate: ¿qué ventajas tiene procesar datos en el edge vs en la nube? Anota 3 ventajas y 3 desventajas.</p>
+      </section>
+
+      <!-- Aplicaciones -->
+      <section id="aplicaciones" class="card fade">
+        <h2>Aplicaciones reales y ejemplos</h2>
+        <div class="grid-2" style="margin-top:8px">
+          <div>
+            <h3>Industria</h3>
+            <p class="muted">Robots colaborativos (cobots) que trabajan junto a operarios, sistemas de inspección automática y mantenimiento predictivo con sensores IoT.</p>
+          </div>
+          <div>
+            <h3>Agro y salud</h3>
+            <p class="muted">Drones y sensores para monitoreo de cultivos; robots asistentes en hospitales que llevan suministros y recogen datos de pacientes.</p>
+          </div>
+        </div>
+
+        <ul class="list" style="margin-top:8px">
+          <li>Robots de reparto con rutas optimizadas en tiempo real.</li>
+          <li>Estaciones meteorológicas conectadas que guían decisiones agrícolas.</li>
+          <li>Sistemas de seguridad y cámaras inteligentes para detección automática de incidentes.</li>
+        </ul>
+      </section>
+
+      <!-- Proyectos prácticos -->
+      <section id="proyectos" class="card fade">
+        <h2>Proyectos prácticos recomendados</h2>
+        <div class="grid-2" style="margin-top:8px">
+          <div>
+            <p class="muted"><strong>Proyecto 1 (grupo):</strong> robot seguidor de línea con telemetría: monta sensores, envía datos por Wi-Fi a un dashboard y presenta resultados (velocidad, errores, tiempo de vuelta).</p>
+            <p class="note" style="margin-top:8px">Incluye: lista de piezas, diagrama de conexiones y breve código de control.</p>
+          </div>
+          <div>
+            <p class="muted"><strong>Proyecto 2 (individual):</strong> estación meteorológica con ESP32 que envía datos a Google Sheets o a un dashboard simple.</p>
+            <p class="note" style="margin-top:8px">Evalúa: precisión, frecuencia de muestreo y consumo energético.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Ventajas y retos -->
+      <section id="retos" class="card fade">
+        <h2>Ventajas, retos y buenas prácticas</h2>
+        <ul class="list">
+          <li><strong>Ventajas:</strong> eficiencia, automatización, reducción de errores y análisis en tiempo real.</li>
+          <li><strong>Retos:</strong> seguridad (autenticación, cifrado), privacidad, interoperabilidad y costos de mantenimiento.</li>
+          <li><strong>Buenas prácticas:</strong> cifrado de datos, actualizaciones seguras OTA, autenticación por claves y pruebas frecuentes.</li>
+        </ul>
+        <p class="note">Actividad: elabora una breve política de seguridad (máx. 200 palabras) para tu proyecto escolar.</p>
+      </section>
+
+      <!-- Recursos -->
+      <section id="recursos" class="card fade">
+        <h2>Recursos y herramientas</h2>
+        <div class="grid-2" style="margin-top:8px">
+          <div>
+            <ul class="list">
+              <li>Tinkercad / Wokwi — simuladores para circuitos y microcontroladores.</li>
+              <li>Arduino IDE / PlatformIO — para programar placas.</li>
+              <li>MIT App Inventor — para crear apps que controlen tu robot.</li>
+            </ul>
+          </div>
+          <div>
+            <p class="muted">Tutorial práctico: busca un tutorial de ESP32 + MQTT y prueba enviar datos a un broker público (Mosquitto / HiveMQ).</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Navigation -->
+      <section class="card fade center">
+        <h3 style="color:var(--accent)">Explora las otras guías</h3>
+        <p class="muted" style="margin-top:6px">Sigue aprendiendo con las guías interconectadas:</p>
+        <div style="margin-top:12px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a class="btn" href="metaverso_obed.html">Metaverso</a>
+          <a class="btn ghost" href="cuantica_obed.html">Informática Cuántica</a>
+        </div>
+      </section>
+
+      <!-- Credit -->
+      <section class="card fade">
+        <strong>Creado por: Obed Baltazar Sánchez Morales_Sección 1-4</strong>
+        <div class="muted" style="margin-top:8px;font-size:13px">Guía didáctica para bachillerato — conceptos, proyectos y recursos actualizados.</div>
+      </section>
+    </main>
+
+    <footer role="contentinfo">
+      <div class="small">Sección 1-4 — IoT y Robótica — Obed Baltazar Sánchez Morales</div>
+    </footer>
+  </div>
+
+  <!-- Particle system (blue-metal theme) -->
+  <script>
+  (function(){
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let DPR = Math.min(devicePixelRatio || 1, 2);
+    let W = canvas.width = Math.floor(innerWidth * DPR);
+    let H = canvas.height = Math.floor(innerHeight * DPR);
+    canvas.style.width = innerWidth + 'px';
+    canvas.style.height = innerHeight + 'px';
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+
+    // adaptive particle count
+    function getCount(){
+      const area = innerWidth * innerHeight;
+      if(area < 360000) return 36;
+      if(area < 800000) return 64;
+      if(area < 1700000) return 100;
+      return 148;
+    }
+
+    const particles = [];
+    function rand(a,b){return Math.random()*(b-a)+a}
+
+    function init(){
+      particles.length = 0;
+      const n = getCount();
+      for(let i=0;i<n;i++){
+        particles.push({
+          x: rand(0, innerWidth),
+          y: rand(0, innerHeight),
+          vx: rand(-0.25,0.25),
+          vy: rand(-0.25,0.25),
+          r: rand(0.8,2.6)
+        });
+      }
+    }
+
+    let mouse = {x:-9999,y:-9999};
+    window.addEventListener('mousemove', e=>{ mouse.x = e.clientX; mouse.y = e.clientY; });
+    window.addEventListener('mouseout', ()=>{ mouse.x = -9999; mouse.y = -9999; });
+
+    function resize(){
+      DPR = Math.min(devicePixelRatio || 1, 2);
+      W = canvas.width = Math.floor(innerWidth * DPR);
+      H = canvas.height = Math.floor(innerHeight * DPR);
+      canvas.style.width = innerWidth + 'px';
+      canvas.style.height = innerHeight + 'px';
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+      init();
+    }
+    window.addEventListener('resize', ()=>{ clearTimeout(resize._t); resize._t = setTimeout(resize,120); });
+
+    const pointColor = 'rgba(58,160,255,0.98)'; // bright
+    const lineBase = 'rgba(58,160,255,';
+
+    let raf;
+    function draw(){
+      ctx.clearRect(0,0,innerWidth,innerHeight);
+
+      // update
+      for(let p of particles){
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // slight attraction to mouse
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if(dist < 140){
+          const force = (140 - dist) * 0.0009;
+          p.vx += (dx/dist) * force;
+          p.vy += (dy/dist) * force;
+        }
+
+        // wrap
+        if(p.x < -10) p.x = innerWidth + 10;
+        if(p.x > innerWidth + 10) p.x = -10;
+        if(p.y < -10) p.y = innerHeight + 10;
+        if(p.y > innerHeight + 10) p.y = -10;
+      }
+
+      // lines
+      const len = particles.length;
+      for(let i=0;i<len;i++){
+        const a = particles[i];
+        for(let j=i+1;j<len;j++){
+          const b = particles[j];
+          const dx = a.x - b.x, dy = a.y - b.y;
+          const d2 = dx*dx + dy*dy;
+          const thresh = 110 * 110;
+          if(d2 < thresh){
+            const alpha = 1 - (d2 / thresh);
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.strokeStyle = lineBase + (0.06 * alpha) + ')';
+            ctx.lineWidth = 1 * (0.4 + 0.8 * alpha);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // points
+      for(let p of particles){
+        ctx.beginPath();
+        ctx.fillStyle = pointColor;
+        ctx.globalAlpha = 0.95;
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      raf = requestAnimationFrame(draw);
+    }
+
+    // visibility handling
+    document.addEventListener('visibilitychange', ()=>{
+      if(document.hidden) cancelAnimationFrame(raf);
+      else draw();
+    });
+
+    init();
+    draw();
+
+    // reveal content on scroll
+    (function(){
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(en=>{
+          if(en.isIntersecting) en.target.classList.add('show');
+        });
+      }, {threshold:0.12});
+      document.querySelectorAll('.fade').forEach(el=>io.observe(el));
+      window.addEventListener('load', ()=> {
+        document.querySelectorAll('#intro-panel, #hero-media').forEach(el=>el.classList.add('show'));
+      });
+    })();
+
+  })();
+  </script>
+</body>
+</html>

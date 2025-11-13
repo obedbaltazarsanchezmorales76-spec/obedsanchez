@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Informática Cuántica — Obed Baltazar Sánchez Morales</title>
+  <meta name="description" content="Guía didáctica de informática cuántica para bachillerato: qubits, puertas, algoritmos, aplicaciones, empresas, retos y actividades prácticas." />
+  <style>
+    :root{
+      --bg-1:#03161a;
+      --bg-2:#062b32;
+      --muted:#9ed8d6;
+      --text:#eafffb;
+      --accent:#18d6c2;
+      --accent-2:#3dd7e3;
+      --card-bg: rgba(7,28,30,0.6);
+      --glass: rgba(255,255,255,0.02);
+      --radius:12px;
+      --maxw:1180px;
+    }
+
+    /* Reset + base */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    body{min-height:100vh}
+    a{color:inherit;text-decoration:none}
+    img{display:block;max-width:100%;height:auto}
+    .break{word-break:break-word;overflow-wrap:break-word}
+
+    /* Layout */
+    .wrap{max-width:var(--maxw);margin:10px auto;padding:12px;position:relative;z-index:2}
+    header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:900;color:#012026;box-shadow:0 10px 30px rgba(24,214,194,0.08);font-size:18px}
+    .title{font-weight:800}
+    .subtitle{color:var(--muted);font-size:12px}
+    nav ul{display:flex;gap:10px;list-style:none;flex-wrap:wrap;margin:0;padding:0}
+    /* NAV: original transparent style */
+    nav a{padding:8px 12px;border-radius:10px;font-weight:700;background:transparent;border:1px solid transparent;color:var(--muted);font-size:0.95rem;transition:all .18s}
+    nav a:hover{background:var(--glass);color:var(--text)}
+
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1fr 320px;gap:12px;margin-top:6px;align-items:start}
+    @media(max-width:980px){.hero{grid-template-columns:1fr}}
+    .panel{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));padding:12px;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 34px rgba(2,6,10,0.55)}
+    h1{font-size:clamp(1.3rem,2.0vw,1.9rem);color:var(--accent);margin:0 0 6px 0;text-shadow:0 6px 20px rgba(24,214,194,0.05)}
+    .muted{color:var(--muted);line-height:1.45;font-size:0.98rem}
+
+    /* media images */
+    .media{border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);background:#04171a}
+    .img-rounded{border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.45);display:block;width:100%;height:auto;object-fit:cover}
+
+    /* Main content */
+    main{margin-top:12px;display:grid;gap:10px}
+    .card{background:var(--card-bg);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);box-shadow:0 8px 24px rgba(2,8,12,0.55);overflow:hidden}
+    .card h2{color:var(--accent-2);margin-bottom:6px;font-size:1.02rem}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:780px){.grid-2{grid-template-columns:1fr}}
+    .list{padding-left:14px;color:var(--muted);margin-top:6px;line-height:1.4;font-size:0.98rem}
+    .note{font-size:0.92rem;color:var(--muted);margin-top:8px;line-height:1.35}
+    .cta{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{display:inline-block;padding:9px 12px;border-radius:10px;font-weight:800;color:#022;background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:0 10px 24px rgba(24,214,194,0.06);transition:transform .18s}
+    .btn:hover{transform:translateY(-3px)}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted);padding:9px 12px;border-radius:10px}
+    footer{margin-top:12px;text-align:center;color:var(--muted);font-size:13px;padding:8px}
+
+    /* Fade-in: small translate so content does not appear "missing" */
+    .fade{opacity:0;transform:translateY(6px);transition:opacity .45s ease, transform .45s ease}
+    .fade.show{opacity:1;transform:translateY(0)}
+
+    /* small screens */
+    @media(max-width:420px){
+      .wrap{padding:10px;margin:10px auto}
+      .logo{width:48px;height:48px;font-size:16px;border-radius:10px}
+      .panel{padding:10px}
+      .card{padding:10px}
+      h1{font-size:1.15rem}
+      .cta{flex-direction:column;align-items:stretch}
+    }
+
+    /* Tables */
+    table{width:100%;border-collapse:collapse;margin-top:8px;font-size:0.95rem}
+    td,th{padding:8px;border-bottom:1px solid rgba(255,255,255,0.03);text-align:left;color:var(--muted)}
+    th{color:var(--accent-2);font-weight:700}
+  </style>
+</head>
+<body>
+  <!-- Particles canvas (z-index 0) -->
+  <canvas id="particles-canvas" aria-hidden="true" style="position:fixed;inset:0;z-index:0;pointer-events:none;background:transparent"></canvas>
+
+  <div class="wrap" role="document" style="position:relative;z-index:2">
+    <header role="banner">
+      <div class="brand">
+        <div class="logo">QC</div>
+        <div>
+          <div class="title">INFORMÁTICA CUÁNTICA</div>
+          <div class="subtitle">Guía didáctica — Creado por: Obed Baltazar Sánchez Morales</div>
+        </div>
+      </div>
+
+      <!-- NAV (original transparent design preserved) -->
+      <nav aria-label="Principal">
+        <ul>
+          <li><a href="metaverso_obed.html">Metaverso</a></li>
+          <li><a href="cuantica_obed.html">Informática Cuántica</a></li>
+          <li><a href="robotica_obed.html">IoT y Robótica</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="panel fade" id="intro-panel">
+        <h1 id="hero-title">Informática Cuántica — guía para bachillerato</h1>
+        <p class="muted" style="margin-top:8px">
+          Breve introducción práctica: qubits, puertas cuánticas, algoritmos y actividades para experimentar en simuladores. Texto conciso, pensado para estudiantes.
+        </p>
+        <div class="cta" style="margin-top:10px">
+          <a class="btn" href="#conceptos">Ver conceptos</a>
+          <a class="btn-ghost" href="#aplicaciones">Ver aplicaciones</a>
+        </div>
+      </div>
+
+      <aside class="media fade" id="hero-media" aria-hidden="false">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1400&q=80"
+             alt="Ilustración de qubits y circuitos cuánticos" class="img-rounded"
+             onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80'">
+      </aside>
+    </section>
+
+    <main>
+      <!-- CONCEPTOS -->
+      <section id="conceptos" class="card fade">
+        <h2>Conceptos esenciales</h2>
+        <div class="grid-2">
+          <div>
+            <p class="muted"><strong>Qubit:</strong> unidad de información cuántica. Un qubit puede estar en superposición: α|0⟩ + β|1⟩ (|α|²+|β|²=1).</p>
+            <p class="muted"><strong>Superposición:</strong> permite que un qubit represente múltiples posibilidades a la vez — útil para explorar soluciones en paralelo.</p>
+            <p class="note">Actividad corta: en un simulador, aplica H a |0⟩ y mide 100 veces. ¿Qué observas en las frecuencias?</p>
+          </div>
+          <div>
+            <img loading="lazy" src="https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?auto=format&fit=crop&w=1200&q=80"
+                 alt="Superposición y qubits" class="img-rounded"
+                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80'">
+          </div>
+        </div>
+      </section>
+
+      <!-- ALGORITMOS -->
+      <section id="algoritmos" class="card fade">
+        <h2>Algoritmos cuánticos (resumen)</h2>
+        <div class="grid-2">
+          <div>
+            <p class="muted"><strong>Shor:</strong> factoriza enteros eficientemente en teoría — relevante para la seguridad de RSA.</p>
+            <p class="muted"><strong>Grover:</strong> búsqueda acelerada en listas no estructuradas (~√N).</p>
+            <p class="muted">Ambos son ejemplos teóricos con gran impacto; su uso práctico exige hardware robusto y corrección de errores.</p>
+          </div>
+          <div>
+            <img loading="lazy" src="https://images.unsplash.com/photo-1517433456452-f9633a875f6f?auto=format&fit=crop&w=1200&q=80"
+                 alt="Algoritmos y código" class="img-rounded"
+                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80'">
+          </div>
+        </div>
+        <p class="note">Tarea: explica en 150–250 palabras la idea central de uno de los algoritmos y su relevancia actual.</p>
+      </section>
+
+      <!-- APLICACIONES -->
+      <section id="aplicaciones" class="card fade">
+        <h2>Aplicaciones prácticas</h2>
+        <div class="grid-2">
+          <div>
+            <ul class="list">
+              <li><strong>Química y farmacología:</strong> modelado de moléculas.</li>
+              <li><strong>Optimización:</strong> logística, diseño de redes.</li>
+              <li><strong>Finanzas:</strong> simulación de riesgos y optimización.</li>
+              <li><strong>Criptografía:</strong> motivación para la criptografía poscuántica.</li>
+            </ul>
+            <p class="note">Investiga un proyecto (IBM/Google/IonQ) y resume su objetivo en 150–200 palabras.</p>
+          </div>
+          <div>
+            <img loading="lazy" src="https://images.unsplash.com/photo-1504805572947-34fad45aed93?auto=format&fit=crop&w=1200&q=80"
+                 alt="Aplicaciones de tecnología" class="img-rounded"
+                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80'">
+          </div>
+        </div>
+      </section>
+
+      <!-- EMPRESAS -->
+      <section id="empresas" class="card fade">
+        <h2>Empresas y recursos</h2>
+        <div class="grid-2">
+          <div>
+            <p class="muted"><strong>IBM Quantum:</strong> Qiskit y acceso en la nube.</p>
+            <p class="muted"><strong>Google Quantum AI:</strong> investigación en superconductores (Sycamore).</p>
+            <p class="muted"><strong>IonQ / Rigetti / Quantinuum:</strong> alternativas (iones atrapados, híbridos).</p>
+          </div>
+          <div>
+            <img loading="lazy" src="https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=1200&q=80"
+                 alt="Laboratorio de investigación" class="img-rounded"
+                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80'">
+          </div>
+        </div>
+      </section>
+
+      <!-- RETOS -->
+      <section id="retos" class="card fade">
+        <h2>Tecnologías y retos</h2>
+        <div class="grid-2">
+          <div>
+            <p class="muted">Desafíos: decoherencia, ruido, corrección de errores (overhead de qubits), escalado y costo (criogenia).</p>
+            <p class="muted">Investigación en materiales, control y códigos de corrección es crucial.</p>
+          </div>
+          <div>
+            <img loading="lazy" src="https://images.unsplash.com/photo-1495576775846-1a63a2f26f7e?auto=format&fit=crop&w=1200&q=80"
+                 alt="Equipos de laboratorio" class="img-rounded"
+                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80'">
+          </div>
+        </div>
+
+        <table class="break">
+          <thead><tr><th>Tecnología</th><th>Ventaja</th><th>Desventaja</th></tr></thead>
+          <tbody>
+            <tr><td>Superconductores</td><td>Escalable</td><td>Criogenia y ruido</td></tr>
+            <tr><td>Iones atrapados</td><td>Alta fidelidad</td><td>Escalado difícil</td></tr>
+            <tr><td>Fotónicos</td><td>Temperatura ambiente</td><td>Detección compleja</td></tr>
+          </tbody>
+        </table>
+        <p class="note">Actividad: resume un artículo sobre corrección de errores (1 página).</p>
+      </section>
+
+      <!-- IMPACTO -->
+      <section id="impacto" class="card fade">
+        <h2>Impacto social y ético</h2>
+        <div class="grid-2">
+          <div>
+            <p class="muted">Riesgos: seguridad de datos, desigualdad de acceso, uso militar. Necesidad de regulación y educación.</p>
+            <p class="muted">Formación y políticas públicas son clave para un uso responsable.</p>
+          </div>
+          <div>
+            <img loading="lazy" src="https://images.unsplash.com/photo-1532074205216-d0e1f9d7f9b9?auto=format&fit=crop&w=1200&q=80"
+                 alt="Ética y tecnología" class="img-rounded"
+                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80'">
+          </div>
+        </div>
+        <p class="note">Debate: propone 3 normas para uso financiero de ordenadores cuánticos (200–300 palabras).</p>
+      </section>
+
+      <!-- ACTIVIDADES -->
+      <section id="actividades" class="card fade">
+        <h2>Actividades y ejercicios</h2>
+        <ol class="list" style="margin-top:8px">
+          <li><strong>Experimento:</strong> circuito H + medida. Ejecutar 200 veces y graficar frecuencias.</li>
+          <li><strong>Comparación:</strong> simulador vs hardware; analizar ruido.</li>
+          <li><strong>Mini-proyecto:</strong> simular H₂ o resolver un problema de optimización.</li>
+        </ol>
+        <p class="note">Entrega: informe (máx. 2 páginas) con método, resultados y conclusión.</p>
+      </section>
+
+      <!-- GLOSARIO -->
+      <section id="glosario" class="card fade">
+        <h2>Glosario y FAQs</h2>
+        <div class="grid-2">
+          <div>
+            <p class="muted"><strong>Qubit:</strong> unidad cuántica de información.</p>
+            <p class="muted"><strong>Superposición:</strong> combinación de estados posibles.</p>
+            <p class="muted"><strong>Entrelazamiento:</strong> correlación entre qubits.</p>
+          </div>
+          <div>
+            <p class="muted"><strong>¿Reemplazará la clásica?</strong> No: será complementaria para tareas específicas.</p>
+            <p class="muted"><strong>¿Cómo empezar?</strong> Álgebra lineal, Python y Qiskit/Cirq.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="card fade" style="text-align:center">
+        <h3 style="color:var(--accent);margin-bottom:8px">Sigue explorando</h3>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <a class="btn" href="metaverso_obed.html">Metaverso</a>
+          <a class="btn" href="robotica_obed.html">IoT y Robótica</a>
+        </div>
+      </section>
+
+      <section class="card fade">
+        <strong>Creado por: Obed Baltazar Sánchez Morales_Sección 1-4</strong>
+        <div class="muted" style="margin-top:8px;font-size:13px">Material adaptado para bachillerato — actividades, recursos y preguntas para evaluar comprensión.</div>
+      </section>
+    </main>
+
+    <footer role="contentinfo" style="margin-top:10px">
+      <div>Sección 1-4 — Informática Cuántica — Obed Baltazar Sánchez Morales</div>
+    </footer>
+  </div>
+
+  <!-- Particle system: optimized for smooth scroll -->
+  <script>
+  (function(){
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let DPR = Math.min(window.devicePixelRatio || 1, 2);
+    let W = 0, H = 0, animationFrameId = null;
+    let particles = [];
+
+    function updateSize(){
+      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      W = Math.floor(window.innerWidth);
+      H = Math.floor(window.innerHeight);
+      canvas.width = Math.floor(W * DPR);
+      canvas.height = Math.floor(H * DPR);
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    }
+
+    // fewer particles + lower speed for smoothness
+    function getCount(){
+      const area = window.innerWidth * window.innerHeight;
+      // scale: 1 per 35000 px2 roughly
+      const base = Math.max(20, Math.min(70, Math.floor(area / 35000)));
+      return base;
+    }
+
+    function rand(min,max){ return Math.random()*(max-min)+min; }
+
+    function initParticles(){
+      particles = [];
+      const count = getCount();
+      for(let i=0;i<count;i++){
+        particles.push({
+          x: rand(0, W),
+          y: rand(0, H),
+          vx: rand(-0.12, 0.12), // slower
+          vy: rand(-0.12, 0.12),
+          r: rand(0.8, 2.0)
+        });
+      }
+    }
+
+    // limit connections per particle to reduce draw cost
+    function drawConnections(){
+      const len = particles.length;
+      const threshold = 100 * 100;
+      for(let i=0;i<len;i++){
+        const a = particles[i];
+        let connections = 0;
+        for(let j=i+1;j<len && connections < 3;j++){ // limit to 3 connections per particle
+          const b = particles[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const d2 = dx*dx + dy*dy;
+          if(d2 < threshold){
+            const alpha = 1 - (d2 / threshold);
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.strokeStyle = `rgba(24,214,194,${(0.06 * alpha).toFixed(3)})`;
+            ctx.lineWidth = 0.6 * (0.5 + 0.8*alpha);
+            ctx.stroke();
+            connections++;
+          }
+        }
+      }
+    }
+
+    const mouse = { x:-9999, y:-9999 };
+    window.addEventListener('mousemove', e=>{ mouse.x = e.clientX; mouse.y = e.clientY; });
+    window.addEventListener('mouseout', ()=>{ mouse.x = mouse.y = -9999; });
+
+    function animate(){
+      animationFrameId = requestAnimationFrame(animate);
+      ctx.clearRect(0,0,W,H);
+
+      for(const p of particles){
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // gentle mouse repulse
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const dist = Math.hypot(dx,dy);
+        if(dist < 120 && dist > 0.1){
+          const force = (120 - dist) * 0.0008;
+          p.vx += (dx/dist) * force;
+          p.vy += (dy/dist) * force;
+        }
+
+        // wrap
+        if(p.x < -10) p.x = W + 10;
+        if(p.x > W + 10) p.x = -10;
+        if(p.y < -10) p.y = H + 10;
+        if(p.y > H + 10) p.y = -10;
+      }
+
+      drawConnections();
+
+      for(const p of particles){
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(24,214,194,0.9)';
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fill();
+      }
+    }
+
+    window.addEventListener('resize', ()=>{ clearTimeout(updateSize._t); updateSize._t = setTimeout(()=>{ updateSize(); initParticles(); }, 120); });
+
+    // intersection reveal (lightweight)
+    (function(){
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting) entry.target.classList.add('show');
+        });
+      }, {threshold: 0.12});
+      document.querySelectorAll('.fade').forEach(el=>io.observe(el));
+      // ensure initial content visible quickly
+      window.addEventListener('load', ()=>{ document.querySelectorAll('.fade').forEach(el=>el.classList.add('show')); });
+    })();
+
+    document.addEventListener('visibilitychange', ()=>{
+      if(document.hidden){ if(animationFrameId) cancelAnimationFrame(animationFrameId); animationFrameId = null; }
+      else { updateSize(); initParticles(); if(!animationFrameId) animate(); }
+    });
+
+    // start
+    updateSize(); initParticles(); animate();
+  })();
+  </script>
+</body>
+</html>
